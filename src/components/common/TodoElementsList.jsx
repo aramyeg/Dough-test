@@ -1,6 +1,7 @@
-import React, {memo} from 'react';
-import {List, Paper, LinearProgress} from '@material-ui/core';
+import React, {createRef, memo,} from 'react';
+import {LinearProgress, List, Paper} from '@material-ui/core';
 import TodoListItem from './TodoListItem';
+import SlidingArrayItems from '../../containers/SlidingArrayItems';
 import useTodoControls from '../../hooks/useTodoControls';
 import {useSelector} from 'react-redux';
 import styled from 'styled-components';
@@ -18,21 +19,24 @@ const TodoElementsList = () => {
     todoList,
   } = useTodoControls();
 
-  return(
+  return (
     <Paper elevation={0} style={{margin: 16}}>
-      {loading && <StyledProgress />}
+      {loading && <StyledProgress/>}
       <List style={{overflow: 'scroll'}}>
+        <SlidingArrayItems>
           {todoList?.map((todo) => (
             <TodoListItem
+              ref={createRef()}
               key={`TodoItem.${todo.id}`}
               id={todo.id}
               description={todo.description}
               checked={todo.completed_at}
             />
           ))}
+        </SlidingArrayItems>
       </List>
     </Paper>
-  )
+  );
 };
 
 export default memo(TodoElementsList);

@@ -1,4 +1,10 @@
-import React, {memo, useState, useEffect, useRef} from 'react';
+import React, {
+  memo,
+  useState,
+  useEffect,
+  useRef,
+  forwardRef
+} from 'react';
 import {
   ListItem,
   Checkbox,
@@ -24,8 +30,8 @@ const LineInput = styled(Input)`
 const StyledListItemText = styled(ListItemText)`
     padding-top: 4px;
     font-size: 16px;
-    text-decoration: ${props => props.checked && "line-through"};
-    color: ${props => props.checked && "#828282"};
+    text-decoration: ${props => props.checked && 'line-through'};
+    color: ${props => props.checked && '#828282'};
 `;
 
 const LineForm = styled.form`
@@ -43,7 +49,7 @@ const StyledListItem = styled(ListItem)`
     }
 `;
 
-const TodoListItem = ({id, description = '', checked = false}) => {
+const TodoListItem = forwardRef(({id, description = '', checked = false, }, ref) => {
   const descriptionRef = useRef(description);
   const [hover, setHover] = useState(window.innerWidth <= 768);
   const [editMode, setEditMode] = useState(false);
@@ -79,6 +85,7 @@ const TodoListItem = ({id, description = '', checked = false}) => {
 
   return (
     <StyledListItem divider={false}
+                    ref={ref}
                     onMouseEnter={e => {
                       setHover(true);
                     }}
@@ -87,7 +94,7 @@ const TodoListItem = ({id, description = '', checked = false}) => {
                       setHover(false);
                     }}>
       <Checkbox
-        onClick={()=>checkTodo(id, checked)}
+        onClick={() => checkTodo(id, checked)}
         checked={!!checked}
       />
       {
@@ -102,19 +109,20 @@ const TodoListItem = ({id, description = '', checked = false}) => {
           </LineForm>
           :
           <StyledListItemText onClick={() => {
-                                setEditMode(true);
-                              }}
+            setEditMode(true);
+          }}
                               checked={!!checked}
                               primary={inputText}/>
       }
       {
         hover &&
-        <IconButton aria-label="Delete Todo" onClick={()=>removeTodo(id)}>
+        <IconButton aria-label="Delete Todo"
+                    onClick={() => removeTodo(id)}>
           <DeleteOutlined/>
         </IconButton>
       }
     </StyledListItem>
   );
-};
+});
 
 export default memo(TodoListItem);

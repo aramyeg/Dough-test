@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import {useEffect, useRef} from 'react';
 
 const useOutsideClick = (attachEvent, callback) => {
   const reference = useRef(null);
@@ -12,12 +12,12 @@ const useOutsideClick = (attachEvent, callback) => {
   useEffect(() => {
     attachEvent && document.addEventListener('click', handleClick, true);
 
-    return ()=>{
+    return () => {
       document.removeEventListener('click', handleClick, true);
-    }
+    };
   }, [attachEvent]);
 
-  return reference
+  return reference;
 
 };
 

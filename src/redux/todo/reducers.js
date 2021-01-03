@@ -5,7 +5,9 @@ import {
   CREATE_TODO_SUCCESS,
   COMPLETE_TODO_SUCCESS,
   UNCOMPLETE_TODO_SUCCESS,
-  UPDATE_TODO_SUCCESS
+  UPDATE_TODO_SUCCESS,
+  DELETE_TODO_SUCCESS,
+  PRECHECK_TODO,
 } from './actions';
 
 const initialState = {
@@ -21,6 +23,15 @@ function todoReducer(state = initialState, action) {
       el.id === action.payload.id
     ));
     shallowTodoList[index] = action.payload;
+    return shallowTodoList;
+  };
+  const checkElement = (id, checked) => {
+    const shallowTodoList = [...state.todoList];
+    const index = shallowTodoList.findIndex((el) => (
+      el.id === id
+    ));
+    shallowTodoList[index].completed_at = checked ?
+      null : new Date();
     return shallowTodoList;
   };
   switch (action.type) {
@@ -69,6 +80,20 @@ function todoReducer(state = initialState, action) {
         loading: false,
         error: null,
         todoList: replaceElement(),
+      };
+    case DELETE_TODO_SUCCESS:
+      const shallowList = [...state.todoList];
+      const arr = shallowList.filter(item => item.id !== action.payload.id);
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        todoList: arr,
+      };
+    case PRECHECK_TODO:
+      return {
+        ...state,
+        todoList: checkElement(action.payload.id, action.payload.checked),
       };
     default:
       return state;

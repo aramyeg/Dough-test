@@ -10,10 +10,12 @@ import {
 export const REQUEST_STARTED = 'REQUEST_STARTED';
 export const REQUEST_FAILED = 'REQUEST_FAILED';
 export const GET_TODO_LIST_SUCCESS = 'GET_TODO_LIST_SUCCESS';
+export const DELETE_TODO_SUCCESS = 'DELETE_TODO_SUCCESS';
 export const CREATE_TODO_SUCCESS = 'CREATE_TODO_SUCCESS';
 export const COMPLETE_TODO_SUCCESS = 'COMPLETE_TODO_SUCCESS';
 export const UNCOMPLETE_TODO_SUCCESS = 'UNCOMPLETE_TODO_SUCCESS';
 export const UPDATE_TODO_SUCCESS = 'UPDATE_TODO_SUCCESS';
+export const PRECHECK_TODO = 'PRECHECK_TODO';
 
 const requestStarted = () => ({
   type: REQUEST_STARTED
@@ -66,12 +68,19 @@ export const createTodo = (description) => {
   };
 };
 
+export const deleteTodoSuccess = id => ({
+  type: DELETE_TODO_SUCCESS,
+  payload: {
+    id: id,
+  }
+});
+
 export const deleteTodo = (id) => {
   return dispatch => {
     dispatch(requestStarted());
     deleteTodoService(id)
       .then(data => {
-        dispatch(getTodoList(data));
+        dispatch(deleteTodoSuccess(data));
       })
       .catch(err => {
         dispatch(requestFailed(err.message));
@@ -138,5 +147,13 @@ export const updateTodo = (id, description) => {
       });
   };
 };
+
+export const precheckTodo = (id, checked) => ({
+  type: PRECHECK_TODO,
+  payload: {
+    id,
+    checked,
+  }
+});
 
 
